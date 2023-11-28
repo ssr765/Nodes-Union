@@ -104,7 +104,7 @@ setInterval(() => {
 }, 499)
 
 // Make the union.
-setInterval(() => {
+iu = setInterval(() => {
     nodes = localStorage.length;
     let node1;
     let node2;
@@ -118,17 +118,26 @@ setInterval(() => {
                 node2 = value;
             }
         }
+        
         console.log(node1, node2);
+
         let [adjacent, opposite] = calculateDistance(node1, node2);
         let hipotenusa = calculateHipotenusa(adjacent, opposite);
         let rotation = calculateAngle(opposite, hipotenusa);
 
-        console.log('top: ' + (node1.y - window.screenY));
-        console.log('left: ' + (node1.x - window.screenX));
+        console.log(adjacent, opposite, hipotenusa, rotation);
+
         union.style.width = `${Math.round(hipotenusa)}px`;
         union.style.top = `${node1.y - window.screenY}px`;
-        union.style.left = `${node2.x - window.screenX}px`;
-        union.style.transform = `rotate(${rotation}deg)`
+        if (adjacent < 0) {
+            union.style.left = `${node1.x - window.screenX}px`;
+            union.style.right = 'unset';
+            union.style.transform = `rotate(${180 - rotation}deg) translateY(-50%)`;
+        } else {
+            union.style.transform = `rotate(${rotation}deg) translateY(-50%)`;
+            union.style.right = `${node1.x - window.screenX}px`;
+            union.style.left = 'unset';
+        }
 
     }
 
