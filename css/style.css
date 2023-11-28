@@ -9,10 +9,19 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #000;
+    overflow: hidden;
 }
 
 #node {
     background-color: #fff;
     width: 5vw;
     height: 5vw;
+}
+
+.union {
+    position: absolute;
+    height: 20px;
+    width: 0;
+    background-color: red;
+    transform: translateY(-50%);
 }
