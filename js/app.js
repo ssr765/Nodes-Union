@@ -146,11 +146,11 @@ draw = setInterval(() => {
         union.style.width = `${Math.round(hypotenuse) * 2}px`;
         union.style.top = `${node1.y - window.screenY}px`;
         if (adjacent < 0) {
-            union.style.transform = `rotate(${180 - rotation / 2}deg) translateY(50%)`;
+            union.style.transform = `rotate(${180 - rotation / 1.75}deg) translateY(50%)`;
             // union.style.left = `${node1.x - window.screenX}px`;
             // union.style.right = 'unset';
         } else {
-            union.style.transform = `rotate(${rotation / 2}deg) translateY(-50%)`;
+            union.style.transform = `rotate(${rotation / 1.75}deg) translateY(-50%)`;
             // union.style.right = `${node1.x - window.screenX}px`;
             // union.style.left = 'unset';
         }
