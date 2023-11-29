@@ -100,7 +100,7 @@ localStorage.setItem(`ventana${id}`, JSON.stringify(initialData));
 // remove the window.
 setInterval(() => {
     windows = loadStorage();
-}, 250)
+}, 50)
 
 // Update window's runtime.
 setInterval(() => {
@@ -110,12 +110,12 @@ setInterval(() => {
     counter++;
     let data = {'runtime': counter, 'x': x, 'y': y, 'winX': window.screenX, 'winY': window.screenY};
     localStorage.setItem(`ventana${id}`, JSON.stringify(data));
-}, 25)
+}, 5)
 
 // Search for inactive windows.
 setInterval(() => {
     lookForDeadWindows();
-}, 122)
+}, 22)
 
 // Make the union.
 draw = setInterval(() => {
