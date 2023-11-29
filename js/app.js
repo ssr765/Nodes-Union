@@ -1,7 +1,9 @@
 const id = Math.round(Math.random() * 10000);
 const node = document.getElementById('node');
+const secondNode = document.querySelector('#second-node');
 const union = document.querySelector('.union');
 console.info('WINDOW ID: ' + id);
+document.title += '#' + id;
 
 // Check if localStorage available.
 if (typeof(Storage) === 'undefined') {
@@ -56,23 +58,27 @@ function calculateDistance(n1, n2) {
     return [n1.x - n2.x, n1.y - n2.y];
 }
 
-function calculateHipotenusa(adjacent, opposite) {
-    let hipotenusa = adjacent ** 2 + opposite ** 2;
-    return Math.sqrt(hipotenusa);
+/**
+ * Calculates the hypotenuse.
+ * @param {Number} adjacent Adjacent side.
+ * @param {Number} opposite Opposite side.
+ * @returns The hypotenuse.
+ */
+function calculateHypotenuse(adjacent, opposite) {
+    let hypotenuse = adjacent ** 2 + opposite ** 2;
+    return Math.sqrt(hypotenuse);
 }
 
-function calculateAngle(opposite, hipotenusa) {
-    let angle = opposite / hipotenusa;
+/**
+ * Calculates the angle close to the node.
+ * @param {Number} opposite Opposite side.
+ * @param {Number} hypotenuse Hypotenuse.
+ * @returns The angle.
+ */
+function calculateAngle(opposite, hypotenuse) {
+    let angle = opposite / hypotenuse;
     return Math.round(Math.asin(angle) * 100);
 }
-
-let windows = loadStorage();
-let counter = 0;
-let nodes = 0;
-
-// Window initial data.
-const initialData = {'runtime': counter, 'x': 0, 'y': 0};
-localStorage.setItem(`ventana${id}`, JSON.stringify(initialData));
 
 /**
  * Searches for the coordinates of the node.
@@ -82,11 +88,19 @@ function nodePosition() {
     return [window.screenX + window.innerWidth / 2, window.screenY + window.innerHeight / 2];
 }
 
+let windows = loadStorage();
+let counter = 0;
+let nodes = 0;
+
+// Window initial data.
+const initialData = {'runtime': counter, 'x': 0, 'y': 0, 'winX': 0, 'winY': 0};
+localStorage.setItem(`ventana${id}`, JSON.stringify(initialData));
+
 // Get the last runtime of every window. If a window is inactive, lookForDeadWindows function will
 // remove the window.
 setInterval(() => {
     windows = loadStorage();
-}, 1000)
+}, 250)
 
 // Update window's runtime.
 setInterval(() => {
@@ -94,23 +108,23 @@ setInterval(() => {
     let x = coords[0];
     let y = coords[1];
     counter++;
-    let data = {'runtime': counter, 'x': x, 'y': y};
+    let data = {'runtime': counter, 'x': x, 'y': y, 'winX': window.screenX, 'winY': window.screenY};
     localStorage.setItem(`ventana${id}`, JSON.stringify(data));
-}, 100)
+}, 25)
 
 // Search for inactive windows.
 setInterval(() => {
     lookForDeadWindows();
-}, 499)
+}, 122)
 
 // Make the union.
-iu = setInterval(() => {
+draw = setInterval(() => {
     nodes = localStorage.length;
     let node1;
     let node2;
 
     if (nodes === 2) {
-        
+        // Identify the nodes.
         for (const [key, value] of Object.entries(windows)) {
             if (key === `ventana${id}`) {
                 node1 = value;
@@ -119,26 +133,33 @@ iu = setInterval(() => {
             }
         }
         
-        console.log(node1, node2);
-
+        // Mathematic stuff.
         let [adjacent, opposite] = calculateDistance(node1, node2);
-        let hipotenusa = calculateHipotenusa(adjacent, opposite);
-        let rotation = calculateAngle(opposite, hipotenusa);
+        let hypotenuse = calculateHypotenuse(adjacent, opposite);
+        let rotation = calculateAngle(opposite, hypotenuse);
+        
+        // Info for debugging.
+        console.log(node1, node2);
+        console.log(adjacent, opposite, hypotenuse, rotation)
 
-        console.log(adjacent, opposite, hipotenusa, rotation);
-
-        union.style.width = `${Math.round(hipotenusa)}px`;
+        // Draw the union.
+        union.style.width = `${Math.round(hypotenuse) * 2}px`;
         union.style.top = `${node1.y - window.screenY}px`;
         if (adjacent < 0) {
-            union.style.left = `${node1.x - window.screenX}px`;
-            union.style.right = 'unset';
-            union.style.transform = `rotate(${180 - rotation}deg) translateY(-50%)`;
+            union.style.transform = `rotate(${180 - rotation / 2}deg) translateY(50%)`;
+            // union.style.left = `${node1.x - window.screenX}px`;
+            // union.style.right = 'unset';
         } else {
-            union.style.transform = `rotate(${rotation}deg) translateY(-50%)`;
-            union.style.right = `${node1.x - window.screenX}px`;
-            union.style.left = 'unset';
+            union.style.transform = `rotate(${rotation / 2}deg) translateY(-50%)`;
+            // union.style.right = `${node1.x - window.screenX}px`;
+            // union.style.left = 'unset';
         }
 
+        // Draw the other node.
+        secondNode.style.top = `${node2.y - node1.winY}px`;
+        secondNode.style.left = `${node2.x - node1.winX}px`;
+    } else {
+        union.style.width = '0px';
     }
 
 }, 50)

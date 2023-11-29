@@ -12,16 +12,18 @@ body {
     overflow: hidden;
 }
 
-#node {
+#node, #second-node {
+    z-index: 30;
+    position: absolute;
     background-color: #fff;
     width: 5vw;
     height: 5vw;
 }
 
 .union {
+    z-index: 20;
     position: absolute;
     height: 20px;
     width: 0;
-    background-color: red;
-    transform: translateY(-50%);
+    background: linear-gradient(to right, red 50%, transparent 51%, transparent 100%);
 }
