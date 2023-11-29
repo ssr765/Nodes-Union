@@ -20,6 +20,10 @@ body {
     height: 5vw;
 }
 
+#second-node {
+    transform: translate(-50%, -50%);
+}
+
 .union {
     z-index: 20;
     position: absolute;
