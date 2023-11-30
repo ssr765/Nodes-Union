@@ -119,6 +119,7 @@ setInterval(() => {
 
 // Make the union.
 draw = setInterval(() => {
+    secondNode.style.display = 'block';
     nodes = localStorage.length;
     let node1;
     let node2;
@@ -160,6 +161,7 @@ draw = setInterval(() => {
         secondNode.style.left = `${node2.x - node1.winX}px`;
     } else {
         union.style.width = '0px';
+        secondNode.style.display = 'none';
     }
 
 }, 50)
